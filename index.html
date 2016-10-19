@@ -4,10 +4,8 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>API Documentation</title>
 
-    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
-    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
     <style>
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
@@ -88,10 +86,12 @@
   color: #90a959;
 }
     </style>
-      <script src="javascripts/all.js"></script>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all_nosearch.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;]">
+  <body class="index" data-languages="[]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -101,246 +101,845 @@
     <div class="tocify-wrapper">
       <img src="images/logo.png" />
         <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
         </div>
-        <div class="search">
-          <input type="text" class="search" id="input-search" placeholder="Search">
-        </div>
-        <ul class="search-results"></ul>
       <div id="toc">
       </div>
-        <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
-        </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="introduction">Introduction</h1>
+        <h1 id="1">Вступление #1</h1>
 
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+<p>Обратите внимание на следующие общие положения:</p>
 
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+<ul>
+<li><p>Во всех запросах и ответах следует использовать кодировку UTF8</p></li>
+<li><p>Для работы вам потребуется получить номер мерчанта (<code class="prettyprint">merchantId</code>), доступный в клиентском интерфейсе, а так же сгенерировать и задать секретный ключ (<code class="prettyprint">sharedsec</code>), что так же можно сделать из клиентского интерфейса. Обратите внимание, что <strong>секретный ключ ни в каком виде не должен покидать вашего сервера</strong>. В случае если он передаётся как часть HTML или каким-либо образом используется в JavaScript, это является <strong>проблемой безопасности</strong> и даёт злоумышленнику возможность делать вызовы к платёжной системе от вашего имени.</p></li>
+<li><p>Для корректной обработки транзакций вам необходимо реализовать обработчики двух URL - один для возвращения пользователя на ваш сайт, другой для приёма уведомлений (<em>webhook</em>/<em>callback</em>) о состоянии транзакций, их можно задать на вкладке &ldquo;Интеграция&rdquo; клиентского интерфейса.</p></li>
+</ul>
 
-<p>This example API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
-
-<h1 id="authentication">Authentication</h1>
-
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<h1 id="api">Оплата через API форм</h1>
+<pre class="highlight html"><code><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"https://secure.mandarinpay.com/Pay"</span> <span class="na">method=</span><span class="s">"POST"</span><span class="nt">&gt;</span> 
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"merchantId"</span> <span class="na">value=</span><span class="s">"812"</span> <span class="nt">/&gt;</span>  
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"price"</span> <span class="na">value=</span><span class="s">"12.34"</span> <span class="nt">/&gt;</span> 
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"orderId"</span> <span class="na">value=</span><span class="s">"325GVD"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"customer_email"</span> <span class="na">value=</span><span class="s">"test@test.com"</span> <span class="nt">/&gt;</span> 
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"customValue1"</span> <span class="na">value=</span><span class="s">"client value 1"</span> <span class="nt">/&gt;</span> 
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"customName1"</span> <span class="na">value=</span><span class="s">"client name 1"</span> <span class="nt">/&gt;</span> 
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"customValue2"</span> <span class="na">value=</span><span class="s">"client value 2"</span> <span class="nt">/&gt;</span>  
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"sign"</span> <span class="na">value=</span><span class="s">"d41d8cd98f00b204e9800998ecf8427e"</span> <span class="nt">/&gt;</span> 
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Оплатить"</span> <span class="nt">/&gt;</span> 
+<span class="nt">&lt;/form&gt;</span>
 </code></pre>
 
-<blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
-</blockquote>
-
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
-
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
-
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-<h1 id="kittens">Kittens</h1>
-
-<h2 id="get-all-kittens">Get All Kittens</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
-
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre>
-
-<p>This endpoint retrieves all kittens.</p>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><code class="prettyprint">GET http://example.com/api/kittens</code></p>
-
-<h3 id="query-parameters">Query Parameters</h3>
+<p>Для оплаты через API форм вам необходимо на своём сайте сгенерировать форму. Перечень и описание возможных полей приведены в таблице.</p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
+<th>Поле</th>
+<th>Обязательность</th>
+<th>Описание</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>merchantId</td>
+<td>Да</td>
+<td>Id мерчанта</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>price</td>
+<td>Да</td>
+<td>Сумма платежа. Обязательна к передаче в текущей версии системы.</td>
+</tr>
+<tr>
+<td>orderId</td>
+<td>Да</td>
+<td>Уникальный номер заказа в системе Продавца.</td>
+</tr>
+<tr>
+<td>customer_email</td>
+<td>Да</td>
+<td>Email пользователя</td>
+</tr>
+<tr>
+<td>sign</td>
+<td>Да</td>
+<td>Контрольная подпись данных о платеже. Методику подсчёта см. ниже</td>
+</tr>
+<tr>
+<td>customValue1</td>
+<td>Нет</td>
+<td>Дополнительные параметры, которые могут использоваться для прикрепления дополнительной информации к данным Платежа и Плательщика. При использовании совместно с customName данные будут отображаться на платежной странице. Не передаются в <code class="prettyprint">Callback</code></td>
+</tr>
+<tr>
+<td>customValue2</td>
+<td>Нет</td>
+<td>См. выше</td>
+</tr>
+<tr>
+<td>customValue3</td>
+<td>Нет</td>
+<td>См. выше</td>
+</tr>
+<tr>
+<td>customName1</td>
+<td>Нет</td>
+<td>Используется совместно с customValue для отображения передаваемой информации Плательщику на платежной странице.</td>
+</tr>
+<tr>
+<td>customName2</td>
+<td>Нет</td>
+<td>См. выше</td>
+</tr>
+<tr>
+<td>customName3</td>
+<td>Нет</td>
+<td>См. выше</td>
+</tr>
+<tr>
+<td>extra_*</td>
+<td>Нет</td>
+<td>Данные поля используются в случае, если необходимо передать дополнительную информацию в <code class="prettyprint">Callback</code> о результате платежа и не видны Плательщику. Должны иметь вид <code class="prettyprint">extra_[A-Za-z0-9_]+</code></td>
+</tr>
+<tr>
+<td>customer_phone</td>
+<td>Нет</td>
+<td>Телефон пользователя</td>
 </tr>
 </tbody></table>
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
+<h2 id="sign">Подсчёт поля sign</h2>
 
-<h2 id="get-a-specific-kitten">Get a Specific Kitten</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p>Контрольная сумма вычисляется от всех присутствующих документированных полей запроса, перечисленных в алфавитном порядке и sharedsec (уникальный кода, который знает только платёжная система и Продавец) и разделённых символом “-”. например: 
+<code class="prettyprint">sign = sha256(email + &quot;-&quot; + merchantId + &quot;-&quot; + orderId + &quot;-&quot; +  price + &quot;-&quot; + sharedsec)</code></p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<blockquote>
+<p>Пример генерации поля sign и формирования формы на PHP</p>
+</blockquote>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<p>Пример полного приложения для работы с API из PHP находится по адресу <a href="https://github.com/MandarinPay/php-example">https://github.com/MandarinPay/php-example</a></p>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">calc_sign</span><span class="p">(</span><span class="nv">$secret</span><span class="p">,</span> <span class="nv">$fields</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="nb">ksort</span><span class="p">(</span><span class="nv">$fields</span><span class="p">);</span>
+        <span class="nv">$secret_t</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+        <span class="k">foreach</span><span class="p">(</span><span class="nv">$fields</span> <span class="k">as</span> <span class="nv">$key</span> <span class="o">=&gt;</span> <span class="nv">$val</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="nv">$secret_t</span> <span class="o">=</span> <span class="nv">$secret_t</span> <span class="o">.</span> <span class="s1">'-'</span> <span class="o">.</span> <span class="nv">$val</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$secret_t</span> <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$secret_t</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">.</span> <span class="s1">'-'</span> <span class="o">.</span> <span class="nv">$secret</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="s2">"sha256"</span><span class="p">,</span> <span class="nv">$secret_t</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">function</span> <span class="nf">generate_form</span><span class="p">(</span><span class="nv">$secret</span><span class="p">,</span> <span class="nv">$fields</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="nv">$sign</span> <span class="o">=</span> <span class="nx">calc_sign</span><span class="p">(</span><span class="nv">$secret</span><span class="p">,</span> <span class="nv">$fields</span><span class="p">);</span>
+        <span class="nv">$form</span> <span class="o">=</span> <span class="s2">""</span><span class="p">;</span>
+        <span class="k">foreach</span><span class="p">(</span><span class="nv">$fields</span> <span class="k">as</span> <span class="nv">$key</span> <span class="o">=&gt;</span> <span class="nv">$val</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="nv">$form</span> <span class="o">=</span> <span class="nv">$form</span> <span class="o">.</span> <span class="s1">'&lt;input type="hidden" name="'</span><span class="o">.</span><span class="nv">$key</span><span class="o">.</span><span class="s1">'" value="'</span> <span class="o">.</span> <span class="nb">htmlspecialchars</span><span class="p">(</span><span class="nv">$val</span><span class="p">)</span> <span class="o">.</span> <span class="s1">'"/&gt;'</span><span class="o">.</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$form</span> <span class="o">=</span> <span class="nv">$form</span> <span class="o">.</span> <span class="s1">'&lt;input type="hidden" name="sign" value="'</span><span class="o">.</span><span class="nv">$sign</span><span class="o">.</span><span class="s1">'"/&gt;'</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$form</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nv">$f</span> <span class="o">=</span> <span class="nx">generate_form</span><span class="p">(</span><span class="s2">"123"</span><span class="p">,</span> <span class="nv">$values</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+   <span class="s2">"email"</span> <span class="o">=&gt;</span> <span class="s2">"user@example.com"</span><span class="p">,</span>
+   <span class="s2">"merchantId"</span> <span class="o">=&gt;</span> <span class="s2">"1"</span><span class="p">,</span>
+   <span class="s2">"orderId"</span> <span class="o">=&gt;</span> <span class="s2">"123"</span><span class="p">,</span>
+   <span class="s2">"price"</span> <span class="o">=&gt;</span> <span class="s2">"123.00"</span><span class="p">,</span>
+<span class="p">));</span>
+<span class="k">echo</span> <span class="nv">$f</span><span class="p">;</span>
+<span class="cp">?&gt;</span>
 </code></pre>
 
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Пример генерации поля sign на языке C#</p>
 </blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
+<pre class="highlight csharp"><code>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">Calculate</span><span class="p">(</span><span class="kt">string</span> <span class="n">secret</span><span class="p">,</span> <span class="n">IDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;</span> <span class="n">values</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">using</span> <span class="p">(</span><span class="n">var</span> <span class="n">sha256</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">Cryptography</span><span class="p">.</span><span class="n">SHA256</span><span class="p">.</span><span class="nf">Create</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">BitConverter</span><span class="p">.</span><span class="nf">ToString</span><span class="p">(</span><span class="n">sha256</span><span class="p">.</span><span class="nf">ComputeHash</span><span class="p">(</span><span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="s">"-"</span><span class="p">,</span> <span class="n">values</span><span class="p">.</span><span class="nf">OrderBy</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Key</span><span class="p">,</span> <span class="n">StringComparer</span><span class="p">.</span><span class="n">Ordinal</span><span class="p">).</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Value</span><span class="p">))</span> <span class="p">+</span> <span class="s">"-"</span> <span class="p">+</span> <span class="n">secret</span><span class="p">))).</span><span class="nf">ToLower</span><span class="p">().</span><span class="nf">Replace</span><span class="p">(</span><span class="s">"-"</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+<span class="p">}</span>
 
-<p>This endpoint retrieves a specific kitten.</p>
 
-<aside class="warning">Inside HTML code blocks like this one, you can&rsquo;t use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+<span class="n">Calculator</span><span class="p">.</span><span class="nf">Calculate</span><span class="p">(</span><span class="s">"123"</span><span class="p">,</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;</span>
+<span class="p">{</span>
+   <span class="p">[</span><span class="s">"email"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"user@example.com"</span><span class="p">,</span>
+   <span class="p">[</span><span class="s">"merchantId"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"1"</span><span class="p">,</span>
+   <span class="p">[</span><span class="s">"orderId"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"123"</span><span class="p">,</span>
+   <span class="p">[</span><span class="s">"price"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"123.00"</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre>
 
-<h3 id="http-request">HTTP Request</h3>
+<h1 id="widget">Использование виджета оплаты {#widget}</h1>
 
-<p><code class="prettyprint">GET http://example.com/kittens/&lt;ID&gt;</code></p>
+<p>Для использования виджета необходимо подключить скрипт</p>
+<pre class="highlight html"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://secure.mandarinpay.com/api/widget.js"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre>
 
-<h3 id="url-parameters">URL Parameters</h3>
+<p>После чего использовать <code class="prettyprint">mandarin.payForm(&quot;#id_формы&quot;);</code> для показа виджета с оплатой. Форма генерируется тем же способом, что и при работе с апи форм.</p>
+
+<p>Так же можно использовать <code class="prettyprint">onclick=&quot;return mandarin.payForm(this);&quot;</code> в качестве обработчика ссылок и кнопок внутри формы оплаты, например:</p>
+<pre class="highlight html"><code><span class="nt">&lt;form</span> <span class="na">onsubmit=</span><span class="s">"return false;"</span><span class="nt">&gt;</span> 
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"merchantId"</span> <span class="na">value=</span><span class="s">"812"</span> <span class="nt">/&gt;</span>  
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"price"</span> <span class="na">value=</span><span class="s">"12.34"</span> <span class="nt">/&gt;</span> 
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"orderId"</span> <span class="na">value=</span><span class="s">"325GVD"</span> <span class="nt">/&gt;</span> 
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"customValue1"</span> <span class="na">value=</span><span class="s">"client value 1"</span> <span class="nt">/&gt;</span> 
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"customValue2"</span> <span class="na">value=</span><span class="s">"client value 2"</span> <span class="nt">/&gt;</span>  
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"customValue3"</span> <span class="na">value=</span><span class="s">"client value 3"</span> <span class="nt">/&gt;</span> 
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"sign"</span> <span class="na">value=</span><span class="s">"d41d8cd98f00b204e9800998ecf8427e"</span> <span class="nt">/&gt;</span>
+
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">onclick=</span><span class="s">"return mandarin.payForm(this);"</span><span class="nt">&gt;</span>Оплатить<span class="nt">&lt;/a&gt;</span>
+
+<span class="nt">&lt;/form&gt;</span>
+</code></pre>
+
+<h2 id="widget-card">Привязка карт через виджет форм {#widget-card}</h2>
+
+<p>Для привязки карты через виджет вам необходимо на своём сайте сгенерировать форму следующего вида:</p>
+<pre class="highlight html"><code><span class="nt">&lt;form</span> <span class="na">onsubmit=</span><span class="s">"return false;"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"merchantId"</span> <span class="na">value=</span><span class="s">"812"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"orderId"</span> <span class="na">value=</span><span class="s">"325GVD"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">'customer_phone'</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">value=</span><span class="s">'+71234567890'</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">'customer_email'</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">value=</span><span class="s">'user@example.com'</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"sign"</span> <span class="na">value=</span><span class="s">"d41d8cd98f00b204e9800998ecf8427e"</span> <span class="nt">/&gt;</span>
+
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">onclick=</span><span class="s">"return mandarin.bindCardForm(this);"</span><span class="nt">&gt;</span>Привязать<span class="nt">&lt;/a&gt;</span>
+
+<span class="nt">&lt;/form&gt;</span>
+</code></pre>
+
+<p>Назначение параметров соответствует таковому в апи платёжных форм. Все параметры являются обязательными. Так же можно использовать <code class="prettyprint">mandarin.bindCardForm(&quot;#id&quot;);</code></p>
+
+<h1 id="api-embed">API встраивания {#embed}</h1>
+
+<p>Для использования API внедрённых форм необходимо подключить скрипт:</p>
+<pre class="highlight html"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://secure.mandarinpay.com/api/embed.js"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre>
+
+<p>После чего из JS доступны для вызова функция
+<code class="prettyprint">js
+mandarinpay.embed.pay(selector, onsuccess, onerror)
+</code>
+<code class="prettyprint">js
+mandarinpay.embed.bindCard(selector, onsuccess, onerror)
+</code></p>
+
+<ul>
+<li><code class="prettyprint">selector</code> - jQuery-совместимый селектор, указывающий на форму или HTML-элемент внутри формы либо сама форма (this из вызова onclick на элементе подойдёт)</li>
+<li><code class="prettyprint">onsuccess</code> - функция обратного вызова, принимающая объект вида:
+<code class="prettyprint">
+{
+transaction:
+{
+    id: &quot;c8a42608-ac02-449d-aae4-265778df5e27&quot;
+}
+}
+</code></li>
+<li><code class="prettyprint">onerror</code> - функция обратного вызова, принимающая объект вида:</li>
+<li><code class="prettyprint">
+{
+error: &quot;Текст ошибки&quot;
+}
+</code></li>
+</ul>
+
+<p>Форма состоит из двух частей
+- Сгенерированные у вас на сервере поля с <code class="prettyprint">type=&quot;hidden&quot;</code> с информацией о транзакции или привязке карты, подробности генерации см. в документации по API форм выше. Напоминаем, что поле <code class="prettyprint">sign</code><strong>обязательно</strong> должно генерироваться на стороне сервера, а клю мерчанта не должен попадать в JavaScript-часть.
+- Видимые пользователю или доступные для изменения другим образом поля с карточными данными, которые <strong>не должны</strong> содержать атрибута <code class="prettyprint">name</code>, вместо этого они идентифицируются атрибутом <code class="prettyprint">data-pay-name</code>. Использование атрибута <code class="prettyprint">name</code> может в определённых условия привести к отправке карточных данных на ваш сервер, что является нарушением процедур PCI DSS.</p>
+
+<p>Таким образом для совершения платежа форма имеет примерно следующий вид:
+&ldquo;`html
+<form id="form-pay">
+    &lt;!&ndash;Генерируется на сервере&ndash;&gt;
+    <input name="price" type="hidden" value="12.34" /><br />
+    <input name="orderId" type="hidden" value="123321" /><br />
+    <input name="merchantId" value="1" type="hidden" />
+    <input name="sign" value="testing" type="hidden" />
+    <input name='customer_phone' type="hidden" value='+71234567890' />
+    <input name='customer_email' type="hidden" value='user@example.com' /></p>
+
+<p>&lt;!&ndash;Заполняется пользователем&ndash;&gt;
+    Card Number: <input type="text" data-pay-name="CardNumber" /><br />
+    Card Holder: <input type="text" data-pay-name="CardHolder" value="CARD HOLDER" /><br />
+    Card Expiration Year: <input type="text" data-pay-name="CardExpireYear" value="20" /><br />
+    Card Expiration Month: <input type="text" data-pay-name="CardExpireMonth" value="12" /><br />
+    CVV: <input type="text" data-pay-name="Cvv" value="123" /><br /></p>
+
+<p>&lt;!&ndash;Обработчик оплаты и ответа на неё&ndash;&gt;
+    <a href="#" onclick="return mandarinpay.embed.pay(this, function (data) { alert('Success. Transaction id is ' + data.transaction.id); }, function (error) { alert('error: ' + error.error); });" class="btn btn-default">
+        Pay
+    </a>
+</form>
+&rdquo;`</p>
+
+<p>В случае с привязкой карты генерируемая на сервере часть выглядит как:</p>
+<pre class="highlight html"><code>    <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">"price"</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">value=</span><span class="s">"12.34"</span> <span class="nt">/&gt;&lt;br</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">"orderId"</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">value=</span><span class="s">"123321"</span> <span class="nt">/&gt;&lt;br</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">"merchantId"</span> <span class="na">value=</span><span class="s">"1"</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">"sign"</span> <span class="na">value=</span><span class="s">"testing"</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">'customer_phone'</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">value=</span><span class="s">'+71234567890'</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">'customer_email'</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">value=</span><span class="s">'user@example.com'</span> <span class="nt">/&gt;</span>
+</code></pre>
+
+<p>а вместо <code class="prettyprint">mandarinpay.embed.pay</code> следует вызывать <code class="prettyprint">mandarinpay.embed.bindCard</code>.</p>
+
+<p>Следует обратить внимание, что форма является одноразовой, после попытки совершить платёж в ней будет сохранён id операции и повторные попытки вызова <code class="prettyprint">mandarinpay.embed.pay</code> не будут приводить к созданию новой. Вы можете безопасно повторять вызовы в рамках одной операции.</p>
+
+<h1 id="rest-api-rest">REST API {#rest}</h1>
+
+<p>Все запросы должны быть с заголовком <code class="prettyprint">Content-Type: application/json</code>
+Аутентикация запросов происходит посредством заголовка <code class="prettyprint">X-Auth</code> следующего содержания:
+<code class="prettyprint">merchantId-SHA256(merchantId-requestId-secret)-requestId</code></p>
+
+<p><code class="prettyprint">requestId</code> - уникальный номер запроса, представляющий из себя текущий таймстамп в миллисекундах, либо набор байт, сгенерированный криптографически-надёжным генератором случайных числел.</p>
+
+<h4 id="requestid-php-requestid-php">Пример генерации requestId на языке PHP {#requestid-php}</h4>
+
+<p>Пример полного приложения для работы с API из PHP находится по адресу <a href="https://github.com/MandarinPay/php-example">https://github.com/MandarinPay/php-example</a></p>
+<pre class="highlight php"><code>function gen_auth($merchantId, $secret)
+{
+        $reqid = time() ."_". microtime(true) ."_". rand();
+        $hash = hash("sha256", $merchantId ."-". $reqid ."-". $secret);
+        return $merchantId ."-".$hash ."-". $reqid;
+}
+</code></pre>
+
+<h4 id="requestid-c-requestid-csharp">Пример генерации requestId на языке C# {#requestid-csharp}</h4>
+<pre class="highlight csharp"><code>
+<span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">GenerateXAuth</span><span class="p">(</span><span class="kt">string</span> <span class="n">secret</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">var</span> <span class="n">requestId</span> <span class="p">=</span> <span class="n">Guid</span><span class="p">.</span><span class="nf">NewGuid</span><span class="p">().</span><span class="nf">ToString</span><span class="p">(</span><span class="s">"N"</span><span class="p">);</span>
+    <span class="kt">string</span> <span class="n">hash</span><span class="p">;</span>
+    <span class="k">using</span> <span class="p">(</span><span class="n">var</span> <span class="n">sha256</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">Cryptography</span><span class="p">.</span><span class="n">SHA256</span><span class="p">.</span><span class="nf">Create</span><span class="p">())</span>
+        <span class="n">hash</span> <span class="p">=</span> <span class="n">BitConverter</span><span class="p">.</span><span class="nf">ToString</span><span class="p">(</span><span class="n">sha256</span><span class="p">.</span><span class="nf">ComputeHash</span><span class="p">(</span><span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="err">$</span><span class="s">"{merchantId}-{requestId}-{secret}"</span><span class="p">))).</span><span class="nf">ToLower</span><span class="p">().</span><span class="nf">Replace</span><span class="p">(</span><span class="s">"-"</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+    <span class="k">return</span> <span class="err">$</span><span class="s">"{merchantId}-{hash}-{requestId}"</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+</code></pre>
+
+<h2 id="create-transaction">Создание транзакции без привязки карты {#create-transaction}</h2>
+
+<p><strong>POST</strong> <code class="prettyprint">/api/transactions</code>
+<code class="prettyprint">json
+{
+  &quot;payment&quot;:
+  {
+      &quot;orderId&quot;: &quot;123321&quot;,
+      &quot;action&quot;: &quot;pay/payout&quot;,
+      &quot;price&quot;: &quot;10&quot;
+  },
+  &quot;customerInfo&quot;:
+  {
+    &quot;email&quot;: &quot;user@example.com&quot;,
+    &quot;phone&quot;: &quot;+79001234567&quot;
+  },
+  &quot;customValues&quot;:
+  [
+     {&quot;name&quot;: &quot;custom field 0&quot;, &quot;value&quot;: &quot;123321&quot;},
+     {&quot;name&quot;: &quot;custom field 1&quot;, &quot;value&quot;: &quot;123321&quot;}
+  ]
+}
+</code></p>
+
+<p><code class="prettyprint">200</code>:
+<code class="prettyprint">json
+{
+  &quot;id&quot;: &quot;43913ddc000c4d3990fddbd3980c1725&quot;,
+  &quot;userWebLink&quot;: &quot;https://secure.mandarinpay.com/Pay?transaction=0eb51e74-e704-4c36-b5cb-8f0227621518&quot;
+}
+</code>
+<code class="prettyprint">400</code> Bad request:
+&ldquo;`json
+{
+  &quot;error&rdquo;: &ldquo;Invalid request&rdquo;</p>
+
+<p>}
+&ldquo;`</p>
+
+<p>В поле <code class="prettyprint">action</code> допустимы значения:</p>
+
+<ul>
+<li><code class="prettyprint">pay</code> - списание денег с карты</li>
+<li><code class="prettyprint">payout</code> - зачисление денег на карту</li>
+</ul>
+
+<p>Для совершения транзакции необходимо перенаправить пользователя на url, полученный в поле <code class="prettyprint">userWebLink</code>. Переход пользователя обратно на ваш сайт не означает окончательного выполнения транзакции, ожидайте получение callback-вызова.</p>
+
+<h2 id="create-card-binding">Создание привязки карты {#create-card-binding}</h2>
+
+<p><strong>POST</strong> <code class="prettyprint">/api/card-bindings</code>
+<code class="prettyprint">json
+{
+    &quot;customerInfo&quot;:
+    {
+        &quot;email&quot;: &quot;user@example.com&quot;,
+        &quot;phone&quot;: &quot;+79001234567&quot;
+    }
+}
+</code></p>
+
+<p><code class="prettyprint">200</code>:
+<code class="prettyprint">json
+{
+    &quot;id&quot;: &quot;0eb51e74-e704-4c36-b5cb-8f0227621518&quot;,
+    &quot;userWebLink&quot;: &quot;https://secure.mandarinpay.com/CardBindings/New?id=0eb51e74-e704-4c36-b5cb-8f0227621518&quot;
+}
+</code></p>
+
+<p>Полученный <code class="prettyprint">id</code> следует сохранить, а пользователя перенаправить по ссылке, полученной в поле <code class="prettyprint">userWebLink</code>. Привязанную карту можно будет использовать после получения callback-уведомления об её успешной привязке.</p>
+
+<h2 id="create-transaction-with-card-binding">Создание транзакции по привязанной карте {#create-transaction-with-card-binding}</h2>
+
+<p><strong>POST</strong> <code class="prettyprint">/api/transactions</code>
+<code class="prettyprint">json
+{
+  &quot;payment&quot;:
+  {
+      &quot;orderId&quot;: &quot;123321&quot;,
+      &quot;action&quot;: &quot;pay/payout&quot;,
+      &quot;price&quot;: &quot;10&quot;
+  },
+  &quot;target&quot;:
+  {
+      &quot;card&quot;: &quot;0eb51e74-e704-4c36-b5cb-8f0227621518&quot;
+  }
+}
+</code></p>
+
+<p><code class="prettyprint">200</code>:
+<code class="prettyprint">json
+{
+  &quot;id&quot;: &quot;43913ddc000c4d3990fddbd3980c1725&quot;
+}
+</code>
+<code class="prettyprint">400</code> Bad request:
+<code class="prettyprint">json
+{
+  &quot;error&quot;: &quot;Invalid request&quot;
+}
+</code></p>
+
+<p>В поле <code class="prettyprint">action</code> допустимы значения:</p>
+
+<ul>
+<li><code class="prettyprint">pay</code> - списание денег с карты</li>
+<li><code class="prettyprint">payout</code> - зачисление денег на карту</li>
+</ul>
+
+<p>Транзакция будет совершена в асинхронном режиме, ожидайте получение callback-вызова</p>
+
+<h2 id="create-card-binding-with-known-card">Создание односторонней привязки карты по известному номеру {#create-card-binding-with-known-card}</h2>
+
+<p><strong>POST</strong> <code class="prettyprint">/api/card-bindings</code>
+<code class="prettyprint">json
+{
+    &quot;customerInfo&quot;:
+    {
+        &quot;email&quot;: &quot;user@example.com&quot;,
+        &quot;phone&quot;: &quot;+79001234567&quot;
+    },
+    &quot;target&quot;:
+    {
+      &quot;knownCardNumber&quot;: &quot;4012888888881881&quot;
+    }
+}
+</code></p>
+
+<p><code class="prettyprint">200</code>:
+<code class="prettyprint">json
+{
+    &quot;id&quot;: &quot;0eb51e74-e704-4c36-b5cb-8f0227621518&quot;
+}
+</code></p>
+
+<p>Привязка доступна для использования только на выплаты сразу после создания.</p>
+
+<h2 id="refund-refund">Отмена транзакции (refund) (#refund)</h2>
+
+<p><strong>POST</strong> <code class="prettyprint">/api/transactions</code>
+<code class="prettyprint">json
+{
+  &quot;payment&quot;:
+  {
+      &quot;orderId&quot;: &quot;123321&quot;,
+      &quot;action&quot;: &quot;reversal&quot;
+  },
+  &quot;target&quot;:
+  {
+      &quot;transaction&quot;: &quot;43913ddc000c4d3990fddbd3980c1725&quot;
+  }
+}
+</code></p>
+
+<p><code class="prettyprint">200</code>:
+<code class="prettyprint">json
+{
+  &quot;id&quot;: &quot;43913ddc000c4d3990fddbd3980c1725&quot;
+}
+</code></p>
+
+<p>Отмена будет совершена в асинхронном режиме, ожидайте получение callback-вызова</p>
+
+<h2 id="rebill-rebill">Создание транзакции на повторное списание (rebill) {#rebill}</h2>
+
+<p><strong>POST</strong> <code class="prettyprint">/api/transactions</code>
+<code class="prettyprint">json
+{
+  &quot;payment&quot;:
+  {
+      &quot;orderId&quot;: &quot;123321&quot;,
+      &quot;action&quot;: &quot;pay&quot;,
+      &quot;price&quot;: &quot;10&quot;
+  },
+  &quot;target&quot;:
+  {
+      &quot;rebill&quot;: &quot;43913ddc000c4d3990fddbd3980c1725&quot;
+  }
+}
+</code></p>
+
+<p><code class="prettyprint">200</code>:
+<code class="prettyprint">json
+{
+  &quot;id&quot;: &quot;43913ddc000c4d3990fddbd3980c1725&quot;
+}
+</code>
+<code class="prettyprint">400</code> Bad request:
+<code class="prettyprint">json
+{
+  &quot;error&quot;: &quot;Invalid request&quot;
+}
+</code></p>
+
+<p>В поле <code class="prettyprint">rebill</code> необходимо указать Id ранее проведённой успешной транзакции на списание средств с карты.
+Транзакция будет совершена в асинхронном режиме, ожидайте получение callback-вызова</p>
+
+<h2 id="create-transaction-with-known-card">Создание транзакции по известному номеру карты {#create-transaction-with-known-card}</h2>
+
+<p>Следует использовать ТОЛЬКО если номер карты был получен ЛИЧНО от клиента на бумаге без участия вашего веб-сайта. Ввод номера карты на вашем сайте без прохождения процедуры сертификации PCI-DSS недопустим.</p>
+
+<p><strong>POST</strong> <code class="prettyprint">/api/transactions</code>
+<code class="prettyprint">json
+{
+  &quot;payment&quot;:
+  {
+      &quot;orderId&quot;: &quot;123321&quot;,
+      &quot;action&quot;: &quot;payout&quot;,
+      &quot;price&quot;: &quot;10&quot;
+  },
+  &quot;customerInfo&quot;:
+  {
+    &quot;email&quot;: &quot;user@example.com&quot;,
+    &quot;phone&quot;: &quot;+79001234567&quot;
+  },
+  &quot;target&quot;:
+  {
+      &quot;knownCardNumber&quot;: &quot;4012888888881881&quot;
+  }
+}
+</code></p>
+
+<p><code class="prettyprint">200</code>:
+<code class="prettyprint">json
+{
+  &quot;id&quot;: &quot;43913ddc000c4d3990fddbd3980c1725&quot;
+}
+</code>
+<code class="prettyprint">400</code> Bad request:
+<code class="prettyprint">json
+{
+  &quot;error&quot;: &quot;Invalid request&quot;
+}
+</code></p>
+
+<p>Транзакция будет совершена в асинхронном режиме, ожидайте получение callback-вызова</p>
+
+<h2 id="create-transaction-to-mobile-phone">Создание выплаты на мобильный телефон {#create-transaction-to-mobile-phone}</h2>
+
+<p><strong>POST</strong> <code class="prettyprint">/api/transactions</code>
+<code class="prettyprint">json
+{
+  &quot;payment&quot;:
+  {
+      &quot;orderId&quot;: &quot;123321&quot;,
+      &quot;action&quot;: &quot;payout&quot;,
+      &quot;price&quot;: &quot;10&quot;
+  },
+  &quot;customerInfo&quot;:
+  {
+    &quot;email&quot;: &quot;user@example.com&quot;,
+    &quot;phone&quot;: &quot;+79001234567&quot;
+  },
+  &quot;target&quot;: &quot;phone&quot;
+}
+</code></p>
+
+<p><code class="prettyprint">200</code>:
+<code class="prettyprint">json
+{
+  &quot;id&quot;: &quot;43913ddc000c4d3990fddbd3980c1725&quot;
+}
+</code>
+<code class="prettyprint">400</code> Bad request:
+<code class="prettyprint">json
+{
+  &quot;error&quot;: &quot;Invalid request&quot;
+}
+</code></p>
+
+<p>Транзакция будет совершена в асинхронном режиме, ожидайте получение callback-вызова</p>
+
+<h2 id="preauth">Блокировка (предавторизация) средств с последующим списанием {#preauth}</h2>
+
+<p>Предавторизация производится аналогично обычной покупке как через API форм, так и через REST. Необходимо в поле <code class="prettyprint">action</code> передать значение <code class="prettyprint">preauth</code>. После того как придёт уведомление об успехе предавторизации полученый вв нём Id транзакции можно использовать для полного или частичного списания через REST API, используя этот номер в качесве значения для <code class="prettyprint">target</code>-&gt;<code class="prettyprint">preauth</code>:</p>
+
+<p><strong>POST</strong> <code class="prettyprint">/api/transactions</code>
+<code class="prettyprint">json
+{
+  &quot;payment&quot;:
+  {
+      &quot;orderId&quot;: &quot;123321&quot;,
+      &quot;action&quot;: &quot;pay&quot;,
+      &quot;price&quot;: &quot;10&quot;
+  },
+  &quot;target&quot;:
+  {
+      &quot;preauth&quot;: &quot;43913ddc000c4d3990fddbd3980c1725&quot;
+  }
+}
+</code></p>
+
+<p><code class="prettyprint">200</code>:
+<code class="prettyprint">json
+{
+  &quot;id&quot;: &quot;43913ddc000c4d3990fddbd3980c1725&quot;
+}
+</code>
+<code class="prettyprint">400</code> Bad request:
+<code class="prettyprint">json
+{
+  &quot;error&quot;: &quot;Invalid request&quot;
+}
+</code></p>
+
+<p>Для отказа от блокировки средств:
+<strong>POST</strong> <code class="prettyprint">/api/transactions</code>
+<code class="prettyprint">json
+{
+  &quot;payment&quot;:
+  {
+      &quot;orderId&quot;: &quot;123321&quot;,
+      &quot;action&quot;: &quot;reversal&quot;
+  },
+  &quot;target&quot;:
+  {
+      &quot;preauth&quot;: &quot;43913ddc000c4d3990fddbd3980c1725&quot;
+  }
+}
+</code></p>
+
+<p>Транзакция будет совершена в асинхронном режиме, ожидайте получение callback-вызова</p>
+
+<h2 id="best-mt">Переводы средств через систему БЭСТ {#best-mt}</h2>
+
+<p><strong>POST</strong> <code class="prettyprint">/api/transactions</code>
+<code class="prettyprint">json
+{
+  &quot;payment&quot;:
+  {
+      &quot;orderId&quot;: &quot;123321&quot;,
+      &quot;action&quot;: &quot;payout&quot;,
+      &quot;price&quot;: &quot;10&quot;
+  },
+  &quot;customerInfo&quot;:
+  {
+    &quot;email&quot;: &quot;user@example.com&quot;,
+    &quot;phone&quot;: &quot;+79001234567&quot;,
+    &quot;firstName&quot;: &quot;Василий&quot;,
+    &quot;middleName&quot;: &quot;Иванович&quot;,
+    &quot;lastName&quot;: &quot;Пупкин&quot;,
+    &quot;document&quot;:
+    {
+        &quot;rfnspDocId&quot;: 21,
+        &quot;docSeria&quot;: &quot;7709&quot;,
+        &quot;docNum&quot;: &quot;543987&quot;,
+        &quot;docIssuer&quot;:  &quot;УПРАВЛЕНИЕ ФЕДЕРАЛЬНОЙ МИГРАЦИОННОЙ СЛУЖБЫ РОССИИ ПО ГОР.МОСКВЕ&quot;,
+        &quot;docIssuerCode&quot;: &quot;770-001&quot;,
+        &quot;docIssuingDate&quot;: &quot;2011-01-01&quot;,
+    },
+    &quot;birthDate&quot;: &quot;1980-01-01&quot;,
+    &quot;birthPlace&quot;: &quot;г. Москва&quot;,
+    &quot;countryCode&quot;: &quot;643&quot;,
+    &quot;taxInfo&quot;:
+    {
+          &quot;isRussianFederationTaxResident&quot;: true
+    }
+  },
+  &quot;target&quot;: &quot;bestmt&quot;
+}
+</code></p>
+
+<p>Транзакция будет совершена в асинхронном режиме, ожидайте получение callback-вызова</p>
+
+<h1 id="notifications">Уведомления о статусе транзакций и привязок карт {#notifications}</h1>
+
+<p>Уведомления высылаются на указанный в клиентском интерфейсе <code class="prettyprint">CallbackUrl</code> в теле POST-запроса с <code class="prettyprint">Content-Type: application/x-www-urlencoded</code>. В качестве ответа обработчик должен вернуть HTTP-код <code class="prettyprint">200</code> и тело ответа <code class="prettyprint">OK</code>.</p>
+
+<p>Для подтверждения того, что уведомление пришло именно от системы MandarinPay необходимо проверять значение поля <code class="prettyprint">sign</code>, являющегося SHA256-суммой от значений всех параметров запроса, отсортированных алфавитно по именам и <code class="prettyprint">SharedSec</code>, разделённых символом <code class="prettyprint">-</code>.</p>
+
+<p>В зависимости от значения <code class="prettyprint">object_type</code> уведомления бывают следующих видов:
+- <code class="prettyprint">card_binding</code> - привязка карты
+- <code class="prettyprint">transaction</code> - транзакция</p>
+
+<h4 id="sign-php-sign-check-php">Пример проверки <code class="prettyprint">sign</code> на языке PHP {#sign-check-php}</h4>
+
+<p>Пример полного приложения для работы с API из PHP находится по адресу <a href="https://github.com/MandarinPay/php-example">https://github.com/MandarinPay/php-example</a></p>
+<pre class="highlight php"><code>function check_sign($secret, $req)
+{
+        $sign = $req['sign'];
+        unset($req['sign']);
+        $to_hash = '';
+        if (!is_null($req) <span class="err">&amp;&amp;</span> is_array($req)) {
+                ksort($req);
+                $to_hash = implode('-', $req);
+        }
+
+        $to_hash = $to_hash .'-'. $secret;
+        $calculated_sign = hash('sha256', $to_hash);
+        return $calculated_sign == $sign;
+}
+
+check_sign("123", $_POST);
+
+</code></pre>
+
+<h4 id="sign-c-sign-check-csharp">Пример проверки <code class="prettyprint">sign</code> на языке C# {#sign-check-csharp}</h4>
+<pre class="highlight csharp"><code><span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">Calculate</span><span class="p">(</span><span class="kt">string</span> <span class="n">secret</span><span class="p">,</span> <span class="n">IDictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;</span> <span class="n">values</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">using</span> <span class="p">(</span><span class="n">var</span> <span class="n">sha256</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">Cryptography</span><span class="p">.</span><span class="n">SHA256</span><span class="p">.</span><span class="nf">Create</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">BitConverter</span><span class="p">.</span><span class="nf">ToString</span><span class="p">(</span><span class="n">sha256</span><span class="p">.</span><span class="nf">ComputeHash</span><span class="p">(</span><span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="s">"-"</span><span class="p">,</span> <span class="n">values</span><span class="p">.</span><span class="nf">OrderBy</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Key</span><span class="p">,</span> <span class="n">StringComparer</span><span class="p">.</span><span class="n">Ordinal</span><span class="p">).</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Value</span><span class="p">))</span> <span class="p">+</span> <span class="s">"-"</span> <span class="p">+</span> <span class="n">secret</span><span class="p">))).</span><span class="nf">ToLower</span><span class="p">().</span><span class="nf">Replace</span><span class="p">(</span><span class="s">"-"</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="nf">CheckSign</span><span class="p">(</span><span class="kt">string</span> <span class="n">secret</span><span class="p">,</span> <span class="n">HttpRequest</span> <span class="n">request</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">var</span> <span class="n">sign</span> <span class="p">=</span> <span class="n">request</span><span class="p">.</span><span class="n">Form</span><span class="p">[</span><span class="s">"sign"</span><span class="p">];</span>
+    <span class="k">if</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrWhiteSpace</span><span class="p">(</span><span class="n">sign</span><span class="p">))</span>
+        <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">sign</span> <span class="p">==</span>
+        <span class="nf">Calculate</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">request</span><span class="p">.</span><span class="n">Form</span><span class="p">.</span><span class="n">Keys</span><span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">k</span> <span class="p">=&gt;</span> <span class="n">k</span> <span class="p">!=</span> <span class="s">"sign"</span><span class="p">).</span><span class="nf">ToDictionary</span><span class="p">(</span><span class="n">k</span> <span class="p">=&gt;</span> <span class="n">k</span><span class="p">,</span> <span class="n">k</span> <span class="p">=&gt;</span> <span class="n">request</span><span class="p">.</span><span class="n">Form</span><span class="p">[</span><span class="n">k</span><span class="p">]));</span>
+<span class="p">}</span>
+
+</code></pre>
+
+<h2 id="notification-card">Уведомления о привязках карт {#notification-card}</h2>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Description</th>
+<th>Поле</th>
+<th>Пример</th>
+<th>Описание</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
+<td><code class="prettyprint">card_binding</code></td>
+<td><code class="prettyprint">38467cb0-da73-4755-84da-2acb7f638a59</code></td>
+<td>Идентификационный номер привязки</td>
+</tr>
+<tr>
+<td><code class="prettyprint">card_holder</code></td>
+<td><code class="prettyprint">VASILY PUPKIN</code></td>
+<td>Держатель карты</td>
+</tr>
+<tr>
+<td><code class="prettyprint">card_number</code></td>
+<td><code class="prettyprint">123456XXXXXX7890</code></td>
+<td>Номер карты</td>
+</tr>
+<tr>
+<td><code class="prettyprint">card_expiration_year</code></td>
+<td><code class="prettyprint">18</code></td>
+<td>Год срока действия карты</td>
+</tr>
+<tr>
+<td><code class="prettyprint">card_expiration_month</code></td>
+<td><code class="prettyprint">9</code></td>
+<td>Месяц срока действия карты</td>
+</tr>
+<tr>
+<td><code class="prettyprint">status</code></td>
+<td><code class="prettyprint">success</code></td>
+<td>Статус привязки</td>
 </tr>
 </tbody></table>
 
-          <h1 id="errors">Errors</h1>
-
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
-
-<p>The Kittn API uses the following error codes:</p>
+<h2 id="notification-transaction">Уведомления о транзакциях {#notification-transaction}</h2>
 
 <table><thead>
 <tr>
-<th>Error Code</th>
-<th>Meaning</th>
+<th>Поле</th>
+<th>Пример</th>
+<th>Описание</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
+<td><code class="prettyprint">transaction</code></td>
+<td><code class="prettyprint">05991602ed7c47d996ca7ab119b07f66</code></td>
+<td>ID транзакции в системе</td>
 </tr>
 <tr>
-<td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
+<td><code class="prettyprint">status</code></td>
+<td><code class="prettyprint">success</code>, <code class="prettyprint">failed</code></td>
+<td>Статус операции</td>
 </tr>
 <tr>
-<td>403</td>
-<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
+<td><code class="prettyprint">action</code></td>
+<td><code class="prettyprint">pay</code>, <code class="prettyprint">payout</code></td>
+<td>Действие (покупка или выплата на карту)</td>
 </tr>
 <tr>
-<td>404</td>
-<td>Not Found &ndash; The specified kitten could not be found</td>
+<td><code class="prettyprint">merchantId</code></td>
+<td><code class="prettyprint">42</code></td>
+<td>Id мерчанта</td>
 </tr>
 <tr>
-<td>405</td>
-<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
+<td><code class="prettyprint">price</code></td>
+<td><code class="prettyprint">12.34</code></td>
+<td>Сумма платежа. Обязательна к передаче в текущей версии системы.</td>
 </tr>
 <tr>
-<td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
+<td><code class="prettyprint">orderId</code></td>
+<td><code class="prettyprint">1234OR</code></td>
+<td>Уникальный номер заказа в системе Продавца.</td>
 </tr>
 <tr>
-<td>410</td>
-<td>Gone &ndash; The kitten requested has been removed from our servers</td>
+<td><code class="prettyprint">customer_email</code></td>
+<td><code class="prettyprint">user@example.com</code></td>
+<td>Email пользователя</td>
 </tr>
 <tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
-</tr>
-<tr>
-<td>429</td>
-<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
-</tr>
-<tr>
-<td>500</td>
-<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
-</tr>
-<tr>
-<td>503</td>
-<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+<td><code class="prettyprint">customer_phone</code></td>
+<td><code class="prettyprint">+71234567890</code></td>
+<td>Телефон пользователя</td>
 </tr>
 </tbody></table>
+
+<h1 id="sandbox">Номера карт для проверки работоспособности в sandbox-режиме</h1>
+
+<p>Следует использовать имя держателя &quot;CARD HOLDER&rdquo; и Cvv &ldquo;123&rdquo;.</p>
+
+<p>Для проведения успешных транзакций используйте любой валидный номер карты (например 4929509947106878), для неуспешных - 4485913187374384</p>
+
+<h1 id=">Протокол идентификации</h1>
+
+<p>Документация по протоколу идентификации находится по ссылке: <a href="https://mandarinpay.com/sites/default/files/XML_API_MandarinInfo.pdf">https://mandarinpay.com/sites/default/files/XML_API_MandarinInfo.pdf</a></p>
 
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
           </div>
       </div>
     </div>
