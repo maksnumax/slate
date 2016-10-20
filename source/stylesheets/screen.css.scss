@@ -82,7 +82,11 @@ html, body {
   // This is the logo at the top of the ToC
   &>img {
     display: block;
-    max-width: 100%;
+    margin: auto;
+    max-width: 50%;
+    padding: 10px;
+
+
   }
 
   &>.search {
