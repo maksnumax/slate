@@ -329,6 +329,7 @@ public static string GenerateXAuth(string secret)
 |refund|отмена операции покупки|
 |rebill|повторное (автоматическое) списание на основании ранее совершенной транзакции `pay`|
 
+1234566
 
 Для совершения вышеуказанных транзакций необходимо отправить `POST` запрос на `https://secure.mandarinpay.com/api/transactions`
 
