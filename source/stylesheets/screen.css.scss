@@ -359,7 +359,7 @@ html, body {
 
   h1 {
     @extend %header-font;
-    font-size: 30px;
+    font-size: 24px;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     border-bottom: 1px solid #ccc;
@@ -529,7 +529,7 @@ html, body {
     background-color: $code-bg;
     color: #fff;
 
-    padding: 2em $main-padding;
+    padding: 1em $main-padding;
     margin: 0;
     width: $examples-width;
 
