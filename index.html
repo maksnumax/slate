@@ -928,6 +928,12 @@
 
 <h1 id="rest-api-bindings">REST API bindings</h1>
 
+<h2 id="requestid">Генерация requestId</h2>
+
+<p>Смотри <a href="#requestid">Генерация requestId</a> из REST API payments</p>
+
+<h2 id="binding-types">Binding types</h2>
+
 <p>Привязка карты (binding) используется для целей списания/зачисления на карту без участия пользователя, а также для проверки того, что пользователь имеет доступ к данной карте (списание контрольной суммы, проверка через 3DS)</p>
 
 <p>Типы привязок и их краткое описание представлены в таблице</p>
@@ -952,7 +958,7 @@
 
 <p>Все транзакции осуществляются в асинхронном режиме, переход пользователя обратно на ваш сайт не означает окончательного выполнения транзакции, необходимо ожидать получения callback-вызова.</p>
 
-<h2 id="card-binding">Card-binding</h2>
+<h2 id="card-binding">- Card-binding</h2>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"customerInfo"</span><span class="p">:</span><span class="w">
     </span><span class="p">{</span><span class="w">
@@ -983,7 +989,7 @@
 
 <p>Привязанную карту можно будет использовать после получения callback-уведомления об её успешной привязке.</p>
 
-<h2 id="one-side-binding">One-side-binding</h2>
+<h2 id="one-side-binding">- One-side-binding</h2>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"customerInfo"</span><span class="p">:</span><span class="w">
     </span><span class="p">{</span><span class="w">
